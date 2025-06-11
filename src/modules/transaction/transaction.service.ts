@@ -1,5 +1,5 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
-import { Transaction, TransactionDoc} from 'src/schemes/transaction';
+import { Transaction, TransactionDoc} from '../../schemes/transaction';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -41,6 +41,16 @@ export class TransactionService {
 
     let response = {}
     if (counter >= 2) {
+        await this.transactionDoc.findOneAndUpdate(
+            { invoice_number: payload.invoice_number },
+            { 
+                $set: { 
+                    status: 'Pembayaran Terverifikasi',
+                    updated_at: new Date()
+                } 
+            },
+            { new: true }
+        );
     response = {
         code: HttpStatus.OK,
         success: true,
